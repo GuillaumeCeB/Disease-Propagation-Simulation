@@ -127,7 +127,7 @@ class SuperEpidemicModel:
         # Extract parameters (done once for efficiency)
         beta = params['beta']
         gamma = params['gamma']
-        xi = params['xi']        # Extract waning immunity rate
+        xi = params['xi']
         alpha = params['alpha']
         rho = params['rho']
         delta = params['delta']
@@ -176,7 +176,7 @@ class SuperEpidemicModel:
                 derivatives[5] -= xi * R_e
 
             if use_mutation and len(y) > 6:
-                M = np.clip(y[6], 0, 1)  # More efficient than max/min
+                M = np.clip(y[6], 0, 1)
                 
             # Apply mutation effect to transmission rates if enabled
             b_y = beta_y
@@ -279,7 +279,7 @@ class SuperEpidemicModel:
             
             M = 0.0
             if use_mutation and idx < len(y):
-                M = np.clip(y[idx], 0, 1)  # More efficient than max/min
+                M = np.clip(y[idx], 0, 1)
             
             # Calculate effective beta (with mutation and seasonal effects)
             beta_effective = beta
@@ -391,7 +391,7 @@ class SuperEpidemicModel:
                 total_population = sum(y[i] for i in population_indices)
                 total_derivative = sum(derivatives[i] for i in population_indices)
                 
-                if abs(total_derivative) > 1e-10:  # Only adjust if there's a significant change
+                if abs(total_derivative) > 1e-10:  # Only adjust if there is a significant change
                     for i in population_indices:
                         # Correct each derivative to maintain sum = 0
                         derivatives[i] -= (y[i] / total_population) * total_derivative
@@ -407,7 +407,7 @@ class SuperEpidemicModel:
                 total_population = sum(y[i] for i in compartment_indices)
                 total_derivative = sum(derivatives[i] for i in compartment_indices)
                 
-                if abs(total_derivative) > 1e-10:  # Only adjust if there's a significant change
+                if abs(total_derivative) > 1e-10:  # Only adjust if there is a significant change
                     for i in compartment_indices:
                         # Correct each derivative to maintain sum = 0
                         derivatives[i] -= (y[i] / total_population) * total_derivative
@@ -581,7 +581,7 @@ class SuperModelGUI:
         self._setup_config_tab()
         self._setup_params_tab()
         self._setup_initial_tab()
-        self._setup_sim_tab()  # Add this line to set up the simulation tab
+        self._setup_sim_tab()
         self._setup_buttons()
 
     def _setup_sim_tab(self):
@@ -1064,8 +1064,7 @@ class SuperModelGUI:
         """Reset parameters to default values"""
         try:
             # Create confirmation dialog
-            if not messagebox.askyesno("Confirm Reset", 
-                                     "Reset all parameters to default values?"):
+            if not messagebox.askyesno("Confirm Reset", "Reset all parameters to default values?"):
                 return
                 
             # Reset model
@@ -1219,7 +1218,7 @@ class SuperModelGUI:
         self.param_vars['beta'].set(0.2)
         self.param_vars['gamma'].set(0.1)
         self.param_vars['mut_rate'].set(0.02)
-        self.param_vars['mut_effect'].set(2.0)  # Significant effect on transmission
+        self.param_vars['mut_effect'].set(2.0)
         
         # Set initial conditions
         self.initial_vars['S'].set(0.99)
@@ -1280,37 +1279,6 @@ class SuperModelGUI:
             import traceback
             traceback.print_exc()
             self._show_error(f"Error running simulation: {str(e)}")
-
-    # def run_simulation(self):
-    #     """Run the simulation and update the plot"""
-    #     try:
-    #         # Update model from UI controls
-    #         self._update_model_from_ui()
-            
-    #         # Check if normalization is enabled
-    #         if self.model.model_config['normalize']:
-    #             # Check for conflicting configurations
-    #             conflicting_configs = (self.model.model_config['use_D'] or 
-    #                                 self.model.model_config['vital_dynamics'] or 
-    #                                 self.model.model_config['migration'])
-    #             all_configs_enabled = (self.model.model_config['use_D'] and 
-    #                                 self.model.model_config['vital_dynamics'] and 
-    #                                 self.model.model_config['migration'])
-                
-    #             # Display error message only if conflicting configs are enabled and not all are enabled
-    #             if conflicting_configs and not all_configs_enabled:
-    #                 messagebox.showerror("Normalization Error", 
-    #                                     "Normalization cannot be enabled with SIRD, natural birth/death, or migration.")
-    #                 return  # Exit the method to prevent running the simulation
-            
-    #         # Run simulation
-    #         t, solution = self.model.run_simulation()
-            
-    #         # Update plot
-    #         self._update_plot()
-            
-    #     except Exception as e:
-    #         self._show_error(f"Error running simulation: {str(e)}")
     
     def _update_model_from_ui(self):
         """Update model settings from UI controls"""
@@ -1446,10 +1414,8 @@ class SuperModelGUI:
         # Plot mutation level if enabled
         if self.model.model_config['use_mutation'] and ax2 is not None and solution.shape[1] > 6:
             ax2.plot(t, solution[:, 6], 'purple', linewidth=2, label='Mutation Level')
-            # ax2.set_ylabel('Mutation Level', color='purple')
-            # ax2.tick_params(axis='y', labelcolor='purple')
-            ax2.yaxis.set_ticks([])  # Remove y-ticks
-            ax2.set_yticklabels([])   # Remove y-tick labels
+            ax2.yaxis.set_ticks([])
+            ax2.set_yticklabels([])
             ax2.set_ylim(0, 1.05)
     
     def _plot_standard_model(self, t, solution, ax2=None):
@@ -1475,8 +1441,8 @@ class SuperModelGUI:
         # Plot mutation level if enabled
         if self.model.model_config['use_mutation'] and ax2 is not None and idx < solution.shape[1]:
             ax2.plot(t, solution[:, idx], 'purple', linewidth=2, label='Mutation Level')
-            ax2.yaxis.set_ticks([])  # Remove y-ticks
-            ax2.set_yticklabels([])   # Remove y-tick labels
+            ax2.yaxis.set_ticks([])
+            ax2.set_yticklabels([])
             ax2.set_ylim(0, 1.05)
     
     def _plot_results(self, t, solution):
@@ -1536,16 +1502,16 @@ class SuperModelGUI:
         
         if self.model.model_config['use_V']:
             param_text += f", ρ={self.model.params['rho']:.3f}"
-            param_text += f", δ={self.model.params['delta']:.3f}"  # Added waning immunity rate
+            param_text += f", δ={self.model.params['delta']:.3f}"
         
         if self.model.model_config['use_Q']:
             param_text += f", κ={self.model.params['kappa']:.3f}"
-            param_text += f", q_eff={self.model.params['q_eff']:.2f}"  # Added quarantine effectiveness
+            param_text += f", q_eff={self.model.params['q_eff']:.2f}"
         
         # Seasonal forcing parameters
         if self.model.model_config['seasonal_forcing']:
             param_text += f"\namp={self.model.params['amp']:.2f}"
-            param_text += f", φ={self.model.params['phi']:.2f}"  # Added phase shift
+            param_text += f", φ={self.model.params['phi']:.2f}"
             param_text += f", period={self.model.params['period']:.1f} days"
         
         # Migration parameter
