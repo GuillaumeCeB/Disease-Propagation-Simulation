@@ -33,7 +33,7 @@ A powerful and flexible tool for simulating the spread of infectious diseases us
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/disease-propagation-simulation.git
+git clone https://github.com/GuillaumeCeB/Disease-Propagation-Simulation.git
 cd disease-propagation-simulation
 
 # Install dependencies
